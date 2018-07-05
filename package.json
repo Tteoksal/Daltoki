@@ -1,0 +1,19 @@
+{
+  "name": "daltoki",
+  "version": "1.0.0",
+  "description": "The official interpreter for Tteok made with Node.js",
+  "main": "daltoki.js",
+  "scripts": {
+    "run": "node daltoki.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tteoksal/Daltoki.git"
+  },
+  "author": "EnvironmentSet",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Tteoksal/Daltoki/issues"
+  },
+  "homepage": "https://github.com/Tteoksal/Daltoki#readme"
+}
