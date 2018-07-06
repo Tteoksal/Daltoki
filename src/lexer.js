@@ -42,32 +42,41 @@ module.exports = (() => {
       return resultIterator;
     }
 
-    * extractToken() {
+    extractToken() {
       const iterator = this[Symbol.iterator]();
-      let tmp;
-      while(!(tmp = iterator.next()).done) {
-        let token = tmp.value;
-        let type = Tokenizer.inferenceTokenType(token);
-        if(type === TOKEN_TYPE.BLANK) continue;
-        else if(type === TOKEN_TYPE.DIGITS) {
-          while(!(tmp = iterator.next('peek')).done && Tokenizer.isDigits(tmp.value)) {
-            token += tmp.value;
-            iterator.next();
+      function* internalIterator() {
+        let tmp;
+        let readOption = yield;
+        while(!(tmp = iterator.next(readOption)).done) {
+          let token = tmp.value;
+          let type = Tokenizer.inferenceTokenType(token);
+          if(type === TOKEN_TYPE.BLANK) {
+            if(readOption === 'peek') iterator.next();
+            continue;
           }
-          type = TOKEN_TYPE.NUMBER;
-        } else if(type === TOKEN_TYPE.IDENTIFIER_CHAR) {
+          else if(type === TOKEN_TYPE.DIGITS) {
+            while(!(tmp = iterator.next('peek')).done && Tokenizer.isDigits(tmp.value)) {
+              token += tmp.value;
+              iterator.next();
+            }
+            type = TOKEN_TYPE.NUMBER;
+          } else if(type === TOKEN_TYPE.IDENTIFIER_CHAR) {
             while(!(tmp = iterator.next('peek')).done && Tokenizer.isIdentifierPart(tmp.value)) {
               token += tmp.value;
               iterator.next();
             }
-          type = TOKEN_TYPE.IDENTIFIER;
-        }
+            type = TOKEN_TYPE.IDENTIFIER;
+          }
 
-        if(type === TOKEN_TYPE.ANY_CHARACTER)
-          throw new TokenizingError('Detected Non-used ANY_CHARACTER Token', token);
-        else
-          yield new Token(type, token);
+          if(type === TOKEN_TYPE.ANY_CHARACTER)
+            throw new TokenizingError('Detected Non-used ANY_CHARACTER Token', token);
+          else
+            readOption = yield new Token(type, token);
+        }
       }
+      const resultIterator = internalIterator();
+      resultIterator.next();
+      return resultIterator;
     }
 
     static inferenceTokenType(char) {
@@ -148,6 +157,22 @@ module.exports = (() => {
       this.string = string;
     }
   }
+
+  const testTTeok = `
+  <main>
+    <let>
+      <id>x</id>
+      <add>1 2 3 4 <sub>11 6</sub></add>
+    </let>
+    <stdout.log>
+      x
+    </stdout.log>
+  </main>
+  `;
+
+  const tokens = new Tokenizer(testTTeok);
+  for(const token of tokens.extractToken())
+    console.log(token);
 
   return {Tokenizer, TOKEN_TYPE};
 })();
