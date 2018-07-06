@@ -11,7 +11,6 @@ module.exports = (() => {
     EQUAL_OPERATOR: Symbol('EqualOperator'),
     MEMBER_OPERATOR: Symbol('MemberOperator'),
     CODE_COVER: Symbol('CodeCover'),
-    DECORATOR_PREFIX: Symbol('DecoratorPrefix'),
     ANY_CHARACTER: Symbol('AnyCharacter')
   };
 
@@ -81,9 +80,7 @@ module.exports = (() => {
           type = TOKEN_TYPE.DIGITS;
           break;
         case Tokenizer.isOperator(char):
-          if(char === '@')
-            type = TOKEN_TYPE.CLOSE_CONT_MARKER;
-          else if(char === '.')
+          if(char === '.')
             type = TOKEN_TYPE.MEMBER_OPERATOR;
           else
             type = TOKEN_TYPE.EQUAL_OPERATOR;
@@ -130,7 +127,7 @@ module.exports = (() => {
     }
 
     static isOperator(char) {
-      const checker = /[@=.]/;
+      const checker = /[=.]/;
       return checker.test(char);
     }
 
@@ -155,6 +152,6 @@ module.exports = (() => {
       return this.string;
     }
   }
-  
+
   return {Tokenizer, TOKEN_TYPE};
 })();
