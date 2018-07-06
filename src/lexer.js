@@ -147,10 +147,6 @@ module.exports = (() => {
       this.type = type;
       this.string = string;
     }
-
-    toString() {
-      return this.string;
-    }
   }
 
   return {Tokenizer, TOKEN_TYPE};
