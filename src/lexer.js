@@ -155,21 +155,6 @@ module.exports = (() => {
       return this.string;
     }
   }
-
-  const testTTeok = `
-  <main>
-    <let>
-      \`x\`
-      <add>1 2 3 4 <sub>11 6</sub></add>
-    </let>
-    <stdout.log>
-      x
-    </stdout.log>
-  </main>
-  `;
-
-  const tokens = new Tokenizer(testTTeok);
-  for(const token of tokens.extractToken())
-    console.log(token);
+  
   return {Tokenizer, TOKEN_TYPE};
 })();
