@@ -3,7 +3,7 @@ The official interpreter for Tteok made with Node.js
 
 ## TODO
 
-- [ ] Lexer 제작
+- [x] Lexer 제작
 - [ ] Parser 제작
 - [ ] Evaluator 제작
 - [ ] 문서 제작
@@ -30,9 +30,17 @@ The official interpreter for Tteok made with Node.js
 `abcd`
 ```
 
-객체를 표현하기 위해서는 함수나 \`\`의 도움을 받아야 합니다. 
+객체를 표현하기 위해서는 함수의 도움을 받아야 합니다. 
 ```html
-`<exp A=1 B="2"></exp>`
+<ob A=1 B=2></ob>
 <ob>`A` 1 `b` 2</ob>
 // as JSON {"A": 1 "b": 2}
+```
+
+### 컨테이너와 객체
+
+컨테이너는 떡에서 객체를 표현하는 방식입니다.
+컨테이너의 문법적 구조는 아래와 같습니다.
+```html
+<identifier attrname = attrvalue>expression</identifier>
 ```
