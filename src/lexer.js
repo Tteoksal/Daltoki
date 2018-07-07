@@ -158,9 +158,5 @@ module.exports = (() => {
     }
   }
 
-  const tokens = new Tokenizer(testTTeok);
-  for(const token of tokens.extractToken())
-    console.log(token);
-
   return {Tokenizer, TOKEN_TYPE};
 })();
