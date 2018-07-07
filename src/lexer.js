@@ -11,7 +11,9 @@ module.exports = (() => {
     EQUAL_OPERATOR: Symbol('EqualOperator'),
     MEMBER_OPERATOR: Symbol('MemberOperator'),
     CODE_COVER: Symbol('CodeCover'),
-    ANY_CHARACTER: Symbol('AnyCharacter')
+    ANY_CHARACTER: Symbol('AnyCharacter'),
+    STRING_BOARDER: Symbol('StringBoarder'),
+    STRING: Symbol('String')
   };
 
   class TokenizingError extends Error {
@@ -42,41 +44,56 @@ module.exports = (() => {
       return resultIterator;
     }
 
-    extractToken() {
+    * composeToken () {
       const iterator = this[Symbol.iterator]();
-      function* internalIterator() {
-        let tmp;
-        let readOption = yield;
-        while(!(tmp = iterator.next(readOption)).done) {
-          let token = tmp.value;
-          let type = Tokenizer.inferenceTokenType(token);
-          if(type === TOKEN_TYPE.BLANK) {
-            if(readOption === 'peek') iterator.next();
-            continue;
+      let tmp;
+      while(!(tmp = iterator.next()).done) {
+        let token = tmp.value;
+        let type = Tokenizer.inferenceTokenType(token);
+        if(type === TOKEN_TYPE.BLANK)
+          continue;
+        else if(type === TOKEN_TYPE.DIGITS) {
+          while(!(tmp = iterator.next('peek')).done && Tokenizer.isDigits(tmp.value)) {
+            token += tmp.value;
+            iterator.next();
           }
-          else if(type === TOKEN_TYPE.DIGITS) {
-            while(!(tmp = iterator.next('peek')).done && Tokenizer.isDigits(tmp.value)) {
-              token += tmp.value;
-              iterator.next();
-            }
-            type = TOKEN_TYPE.NUMBER;
-          } else if(type === TOKEN_TYPE.IDENTIFIER_CHAR) {
-            while(!(tmp = iterator.next('peek')).done && Tokenizer.isIdentifierPart(tmp.value)) {
-              token += tmp.value;
-              iterator.next();
-            }
-            type = TOKEN_TYPE.IDENTIFIER;
+          type = TOKEN_TYPE.NUMBER;
+        } else if(type === TOKEN_TYPE.IDENTIFIER_CHAR) {
+          while(!(tmp = iterator.next('peek')).done && Tokenizer.isIdentifierPart(tmp.value)) {
+            token += tmp.value;
+            iterator.next();
           }
+          type = TOKEN_TYPE.IDENTIFIER;
+        } else if(type === TOKEN_TYPE.STRING_BOARDER) {
+          token = '';
+          while(!(tmp = iterator.next()).done && !Tokenizer.isStringBoarder(tmp.value)) {
+            token += tmp.value;
+          }
+          type = TOKEN_TYPE.STRING;
+        }
+        if(type === TOKEN_TYPE.ANY_CHARACTER)
+          throw new TokenizingError('Detected Non-used ANY_CHARACTER Token', token);
+        else
+          yield new Token(type, token);
+      }
+    }
 
-          if(type === TOKEN_TYPE.ANY_CHARACTER)
-            throw new TokenizingError('Detected Non-used ANY_CHARACTER Token', token);
-          else
-            readOption = yield new Token(type, token);
+    extractToken() {
+      const tokenGenerator = this.composeToken();
+      function* getToken() {
+        const tokens = [...tokenGenerator];
+        let readType = yield ;
+        let ptr = 0;
+        while(ptr < tokens.length) {
+          const result = tokens[ptr++];
+          if(readType === 'peek')
+            ptr--;
+          readType = yield result;
         }
       }
-      const resultIterator = internalIterator();
-      resultIterator.next();
-      return resultIterator;
+      const tokenIterator = getToken();
+      tokenIterator.next();
+      return tokenIterator;
     }
 
     static inferenceTokenType(char) {
@@ -108,6 +125,9 @@ module.exports = (() => {
           break;
         case Tokenizer.isCloseMarker(char):
           type = TOKEN_TYPE.CLOSE_CONT_MARKER;
+          break;
+        case Tokenizer.isStringBoarder(char):
+          type = TOKEN_TYPE.STRING_BOARDER;
           break;
         default:
           type = TOKEN_TYPE.ANY_CHARACTER;
@@ -147,6 +167,11 @@ module.exports = (() => {
 
     static isCloseMarker(char) {
       const checker = /\//;
+      return checker.test(char);
+    }
+
+    static isStringBoarder(char) {
+      const checker = /\"/;
       return checker.test(char);
     }
   }
