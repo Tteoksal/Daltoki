@@ -1,5 +1,5 @@
 module.exports = (() => {
-  const {Tokenizer,TOKEN_TYPE} = require('./lexer');
+  const {TOKEN_TYPE} = require('./lexer');
   const PARSER_STATUS = {
     NONE: Symbol('None'),
     NUMBER: Symbol('Number'),
