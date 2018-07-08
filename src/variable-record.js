@@ -22,13 +22,14 @@ module.exports = (() => {
     }
 
     get() {
-      if(this.isInitialized())
+      if(!this.isInitialized())
         throw new BindingError('accessing to uninitialized binding');
       return this.value;
     }
 
     set(value) {
-      this.status = BINDING_STATUS.INITIALIZED;
+      if(this.status === BINDING_STATUS.UNINITIALIZED)
+        this.status = BINDING_STATUS.INITIALIZED;
       this.value = value;
       return this.value = value;
     }
@@ -62,13 +63,12 @@ module.exports = (() => {
 
     getBinding(name) {
       let scope = this;
-      let record = this.record;
       while(scope !== null) {
+        let record = scope.record;
         if(scope.isExistBinding(name)) {
           return record.get(name);
         }
         scope = scope.outer;
-        record = scope.record;
       }
 
       return new Binding();
