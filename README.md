@@ -36,7 +36,7 @@ The official interpreter for Tteok made with Node.js
 
 * eval
 ```html
-<eval>`<add>1 2 3 4 5</add>, `<sub>2 1</sub> </eval>
+<eval>`<add>1 2 3 4 5</add> `<sub>2 1</sub> </eval>
 ```
 인수로 받은 모든 코드 객체를 평가하고, 마지막 코드 객체의 결과를 반환한다.
 
@@ -72,9 +72,9 @@ The official interpreter for Tteok made with Node.js
 
 * lambda
 ```html
-<lambda a = `number  b = `number> `<add>a b</add> </lambda>
+<lambda a = 1 b = 2> `<add>a b</add> </lambda>
 ```
-새로운 함수를 생성한다. 속성을 통해 인자명 = 타입의 심볼명 으로 인자를 정의할 수 있다. 인수는 함수의 몸체가 된다.
+새로운 함수를 생성한다. 속성을 통해 인자명 = 기본값 으로 인자를 정의할 수 있다. 인수는 함수의 몸체가 된다.
 
 * is
 ```html
@@ -90,8 +90,8 @@ The official interpreter for Tteok made with Node.js
 
 * obj
 ```html
-<obj a = `String>`a "hi" `b 2</obj>
-<obj extend = <obj a = `String></obj>> `a "bye" </obj>
+<obj a = "hi"></obj>
+<obj extend = <obj a = "bye"> b = "hi" </obj></obj>
 ```
 속성을 통해 객체의 프로퍼티의 타입을, 인수를 통해 값을 정한다.
 extend 속성은 예약된 속성으로,이 속성의 값을 확장하는 객체를 만든 후에 위 작업을 진행한다.
@@ -107,3 +107,9 @@ extend 속성은 예약된 속성으로,이 속성의 값을 확장하는 객체
 <while>1 `<print>"INFINITY"</print> </while>
 ```
 첫 번째 인수가 거짓이 될 때 까지 다른 인수로 들어온 표현식들을 평가하고 마지막 표현식의 결과를 반환한다.
+
+* when
+```html
+<when>`a 1 `<print>"Now a is 1"</print> </when>
+```
+변수명이 첫 번째 인수인 변수의 값이 두 번째 인수와 같아질 때, 나머지 인수로 들어온 표현식들을 평가하고 그 결과를 반환.
