@@ -1,10 +1,4 @@
-const TYPES = {
-  NUMBER: Symbol('Number'),
-  STRING: Symbol('String'),
-  OBJECT: Symbol('Object'),
-  FUNCTION: Symbol('Function'),
-  NONE: Symbol('None')
-};
+const TYPES = require('./types');
 
 class Type {
   constructor(type) {
@@ -13,7 +7,7 @@ class Type {
 
   static inferenceType(value) {
     let baseType = typeof value;
-    let result = typeof TYPES.NONE;
+    let result;
     switch (true) {
       case baseType === 'number':
         result = TYPES.NUMBER;
@@ -21,8 +15,11 @@ class Type {
       case baseType === 'string':
         result = TYPES.STRING;
         break;
+      case baseType === 'symbol':
+        result = TYPES.SYMBOL;
+        break;
       default:
-        result = value === null ? TYPES.NONE : value.size ? TYPES.OBJECT : TYPES.FUNCTION
+        result = typeof value.size === 'number' ? TYPES.OBJECT : TYPES.FUNCTION;
     }
     return result;
   }
@@ -37,4 +34,4 @@ class Type {
   }
 }
 
-module.exports = {Type, TYPES};
+module.exports = Type;

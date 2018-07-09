@@ -1,4 +1,5 @@
-const {Type, TYPES} = require('./type');
+const Type = require('./type');
+const TYPES = require('./types');
 
 class StringType extends Type {
   constructor() {
@@ -40,6 +41,10 @@ class StringType extends Type {
 
   defaultValue() {
     return '';
+  }
+
+  valueOf() {
+    return TYPES.STRING;
   }
 }
 
