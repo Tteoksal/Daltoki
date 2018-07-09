@@ -29,6 +29,10 @@ class Type {
   static isType(type, variable) {
     return type === variable.type;
   }
+
+  static call(variable) {
+    return variable;
+  }
 }
 
 module.exports = Type;
