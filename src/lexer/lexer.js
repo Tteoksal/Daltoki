@@ -160,4 +160,4 @@ class Tokenizer {
   }
 }
 
-module.exports = { Tokenizer, TOKEN_TYPE };
+module.exports = Tokenizer;
