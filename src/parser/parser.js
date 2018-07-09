@@ -1,4 +1,4 @@
-const TOKEN_TYPE = require("../lexer/token-types");
+const TOKEN_TYPE = require('../lexer/token-types');
 const PARSER_STATUS = require('./parser-status');
 const ELEMENT_PARSE_TABLE = require('./element/element-parse-table');
 const ParsingError = require('./parsing-error');
@@ -21,7 +21,7 @@ class Parser {
 
     if (this.status !== PARSER_STATUS.NONE)
       throw new ParsingError(
-        "Status of Parser is not NONE when begin.",
+        'Status of Parser is not NONE when begin.',
         this.status
       );
 
@@ -53,7 +53,7 @@ class Parser {
       case TOKEN_TYPE.RIGHT_CONT_COVER:
         break;
       default:
-        throw new ParsingError("unexpected token", token);
+        throw new ParsingError('unexpected token', token);
     }
 
     return result;
@@ -80,7 +80,7 @@ class Parser {
   parseIdentifier(lexer, identifierToken) {
     if (this.checkStatus(ELEMENT_PARSE_TABLE.IDENTIFIER)) {
       const finish = this.statusController(PARSER_STATUS.IDENTIFIER);
-      const nextToken = lexer.next("peek").value;
+      const nextToken = lexer.next('peek').value;
       let result = new IdentifierElement(identifierToken.string);
       if (nextToken.type === TOKEN_TYPE.MEMBER_OPERATOR) {
         lexer.next();
@@ -107,7 +107,7 @@ class Parser {
 
   parseContainer(lexer) {
     if (this.checkStatus(ELEMENT_PARSE_TABLE.CONTAINER)) {
-      const peekedToken = lexer.next("peek").value;
+      const peekedToken = lexer.next('peek').value;
       let result;
       if (peekedToken.type === TOKEN_TYPE.IDENTIFIER) {
         const func = this.parseContainerFunc(lexer);
@@ -179,7 +179,7 @@ class Parser {
       expectedStatus => this.status === expectedStatus
     );
     if (!accept)
-      throw new ParsingError("unexpected status of Parser", this.status);
+      throw new ParsingError('unexpected status of Parser', this.status);
     return true;
   }
 }
