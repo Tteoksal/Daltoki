@@ -1,8 +1,8 @@
-const { Type } = require('./type');
+const Type = require('./types/type');
 
 class Variable {
   constructor(type, value = type.defaultValue()) {
-    if(!Type.isType(type, Type.inferenceType(value)))
+    if(type != Type.inferenceType(value))
       throw new TypeError('unexpected value');
     this.type = type;
     this.value = value;
