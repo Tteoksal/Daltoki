@@ -1,25 +1,6 @@
-const TOKEN_TYPE = {
-  BLANK: Symbol("Blank"),
-  DIGITS: Symbol("Digits"),
-  LEFT_CONT_COVER: Symbol("LeftContainerCover"),
-  RIGHT_CONT_COVER: Symbol("RightContainerCover"),
-  CLOSE_CONT_MARKER: Symbol("CloseContainerMarker"),
-  IDENTIFIER_CHAR: Symbol("IdentifierChar"),
-  IDENTIFIER: Symbol("Identifier"),
-  NUMBER: Symbol("Number"),
-  EQUAL_OPERATOR: Symbol("EqualOperator"),
-  MEMBER_OPERATOR: Symbol("MemberOperator"),
-  CODE_COVER: Symbol("CodeCover"),
-  ANY_CHARACTER: Symbol("AnyCharacter"),
-  STRING_BOARDER: Symbol("StringBoarder"),
-  STRING: Symbol("String")
-};
-
-class TokenizingError extends Error {
-  constructor(msg, info = "No Given Info") {
-    super(`TokenizingError: ${msg} \n ${String(info)}`);
-  }
-}
+const TOKEN_TYPE = require('./token-types');
+const TokenizingError = require('./tokenizing-error');
+const Token = require('./token');
 
 class Tokenizer {
   constructor(string) {
@@ -49,10 +30,10 @@ class Tokenizer {
       let token = tmp.value;
       let type = Tokenizer.inferenceTokenType(token);
       if (type === TOKEN_TYPE.BLANK) continue;
-      else if (type === TOKEN_TYPE.DIGITS) {
+      else if (type === TOKEN_TYPE.DIGIT) {
         while (
           !(tmp = iterator.next("peek")).done &&
-          Tokenizer.isDigits(tmp.value)
+          Tokenizer.isDigit(tmp.value)
           ) {
           token += tmp.value;
           iterator.next();
@@ -109,8 +90,8 @@ class Tokenizer {
       case Tokenizer.isBlank(char):
         type = TOKEN_TYPE.BLANK;
         break;
-      case Tokenizer.isDigits(char):
-        type = TOKEN_TYPE.DIGITS;
+      case Tokenizer.isDigit(char):
+        type = TOKEN_TYPE.DIGIT;
         break;
       case Tokenizer.isOperator(char):
         if (char === ".") type = TOKEN_TYPE.MEMBER_OPERATOR;
@@ -143,7 +124,7 @@ class Tokenizer {
     return checker.test(char);
   }
 
-  static isDigits(char) {
+  static isDigit(char) {
     const checker = /\d/;
     return checker.test(char);
   }
@@ -174,15 +155,8 @@ class Tokenizer {
   }
 
   static isStringBoarder(char) {
-    const checker = /\"/;
+    const checker = /"/;
     return checker.test(char);
-  }
-}
-
-class Token {
-  constructor(type, string) {
-    this.type = type;
-    this.string = string;
   }
 }
 
