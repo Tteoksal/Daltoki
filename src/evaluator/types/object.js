@@ -1,4 +1,5 @@
-const {Type, TYPES} = require('./type');
+const Type = require('./type');
+const TYPES = require('./types');
 
 class ObjectType extends Type {
   constructor() {
@@ -55,6 +56,10 @@ class ObjectType extends Type {
 
   defaultValue() {
     return new Map();
+  }
+
+  valueOf() {
+    return TYPES.OBJECT;
   }
 }
 
