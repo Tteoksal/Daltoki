@@ -9,9 +9,6 @@ class Type {
     let baseType = typeof value;
     let result;
     switch (true) {
-      case baseType === 'number':
-        result = TYPES.NUMBER;
-        break;
       case baseType === 'string':
         result = TYPES.STRING;
         break;
@@ -19,7 +16,7 @@ class Type {
         result = TYPES.SYMBOL;
         break;
       default:
-        result = typeof value.size === 'number' ? TYPES.OBJECT : TYPES.FUNCTION;
+        result = typeof value.size === 'number' ? TYPES.OBJECT : value.constructor.one ? TYPES.NUMBER : TYPES.FUNCTION;
     }
     return result;
   }

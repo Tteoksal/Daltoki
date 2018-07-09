@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Tteoksal/Daltoki/issues"
   },
-  "homepage": "https://github.com/Tteoksal/Daltoki#readme"
+  "homepage": "https://github.com/Tteoksal/Daltoki#readme",
+  "dependencies": {
+    "big-integer": "^1.6.32"
+  }
 }

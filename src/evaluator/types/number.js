@@ -1,4 +1,6 @@
-const {Type, TYPES} = require('./type');
+const Type = require('./type');
+const TYPES = require('./types');
+const BigInt = require("big-integer");
 
 class NumberType extends Type {
   constructor() {
@@ -12,7 +14,7 @@ class NumberType extends Type {
       throw new TypeError('find non-number variable');
     const xVal = x.unwrap();
     const yVal = y.unwrap();
-    return xVal + yVal;
+    return xVal.add(yVal);
   }
 
   static sub(x, y) {
@@ -22,7 +24,7 @@ class NumberType extends Type {
       throw new TypeError('find non-number variable');
     const xVal = x.unwrap();
     const yVal = y.unwrap();
-    return xVal - yVal;
+    return xVal.sub(yVal);
   }
 
   static mul(x, y) {
@@ -32,7 +34,7 @@ class NumberType extends Type {
       throw new TypeError('find non-number variable');
     const xVal = x.unwrap();
     const yVal = y.unwrap();
-    return xVal * yVal;
+    return xVal.multiply(yVal);
   }
 
   static div(x, y) {
@@ -42,7 +44,7 @@ class NumberType extends Type {
       throw new TypeError('find non-number variable');
     const xVal = x.unwrap();
     const yVal = y.unwrap();
-    return Math.round(xVal / yVal);
+    return xVal.divide(yVal);
   }
 
   static equal(x, y) {
@@ -52,11 +54,15 @@ class NumberType extends Type {
       throw new TypeError('find non-number variable');
     const xVal = x.unwrap();
     const yVal = y.unwrap();
-    return xVal === yVal;
+    return xVal.equals(yVal);
   }
 
   defaultValue() {
-    return 0;
+    return new BigInt('0');
+  }
+
+  valueOf() {
+    return TYPES.NUMBER;
   }
 }
 
